@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Reset Password</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+</head>
+<body>
+  <h2>Reset your password</h2>
+  <input type="password" id="password" placeholder="New password" />
+  <button id="submit">Reset</button>
+
+  <script>
+    const supabase = supabase.createClient(
+      'https://idpnvgvamdedaynetjvm.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlkcG52Z3ZhbWRlZGF5bmV0anZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY3NDQyNzMsImV4cCI6MjA2MjMyMDI3M30.MkMaSgmXUDPD1875MoW3h-SPXPBKFvPGSqlW3gWHddY'
+    );
+
+    window.onload = () => {
+      const hash = window.location.hash;
+      const token = new URLSearchParams(hash.slice(1)).get('access_token');
+
+      if (!token) {
+        alert("Access token missing!");
+        return;
+      }
+
+      document.getElementById("submit").onclick = async () => {
+        const password = document.getElementById("password").value;
+        const { error } = await supabase.auth.updateUser({ password });
+        if (error) alert("❌ " + error.message);
+        else alert("✅ Password changed successfully");
+      };
+    };
+  </script>
+</body>
+</html>
